@@ -1,0 +1,103 @@
+package com.fnac.adapter;
+
+import java.util.ArrayList;
+import java.util.List;
+import com.fnac.Activity.R;
+import com.fnac.Activity.StoreMap;
+import com.fnac.pojo.StoreInfo;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.Html;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.TextView;
+
+public class StoreViewAdapter extends BaseAdapter{
+	// Log Tag
+	private static String TAG = "fnac";
+	private List<StoreInfo> storeList;
+	private Activity mActivity;
+	 Button map_button;
+	@Override
+	public int getCount() {
+		// TODO Auto-generated method stub
+		return storeList.size();
+	}
+
+	@Override
+	public Object getItem(int position) {
+		// TODO Auto-generated method stub
+		return storeList.get(position);
+	}
+
+	@Override
+	public long getItemId(int position) {
+		// TODO Auto-generated method stub
+		return position;
+	}
+
+	class ViewHolder {
+		TextView storename;
+		
+	}
+	public StoreViewAdapter(Activity activity, List<StoreInfo> list) {
+		super();
+		mActivity = activity;
+		storeList = new ArrayList<StoreInfo>();
+		if (list != null)
+			storeList = list;
+		Log.d(TAG, " adapter storeList size=="+storeList.size());
+	}
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		// TODO Auto-generated method stub
+		final ViewHolder holder;
+		if (convertView == null) {
+			holder = new ViewHolder();
+			LayoutInflater inflater = LayoutInflater.from(mActivity);
+			convertView = inflater.inflate(R.layout.item_store, null);
+			holder.storename = (TextView) convertView.findViewById(R.id.store_name);
+			convertView.setTag(holder);
+		} else {
+			holder =  (ViewHolder) convertView.getTag();
+		}
+		final StoreInfo storeInfo = storeList.get(position);
+		Log.d(TAG, " getView storeList size=="+storeList.size());
+		holder.storename.setText(Html.fromHtml(storeInfo.getNom()));
+		Log.d(TAG, "storename " +storeInfo.getNom());
+		
+		convertView.setOnClickListener(new DetailButtonOnClickListener(mActivity,
+				storeInfo));
+		return convertView;
+	}
+
+	
+	class DetailButtonOnClickListener implements OnClickListener {
+		private StoreInfo storeInfo;
+
+		public DetailButtonOnClickListener(Context context,
+				StoreInfo storeInfo) {
+			this.storeInfo = storeInfo;
+		}
+
+		@Override
+		public void onClick(View v) {
+			Log.v("item", "clicked " + v.toString());
+			// Get current Activity
+			Bundle mBundle = new Bundle();
+			mBundle.putSerializable(StoreInfo.SER_KEY, storeInfo);
+			Intent intent = new Intent();
+			intent.putExtras(mBundle);
+			intent.setClass(v.getContext(), StoreMap.class);
+			v.getContext().startActivity(intent);
+		}
+	}
+	
+}

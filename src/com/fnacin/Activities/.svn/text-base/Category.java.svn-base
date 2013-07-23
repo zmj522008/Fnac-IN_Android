@@ -1,0 +1,52 @@
+package com.fnac.Activity;
+
+import java.util.List;
+
+import android.app.ListActivity;
+import android.os.Bundle;
+import android.util.Log;
+
+import com.fnac.adapter.CategoryViewAdapter;
+import com.fnac.interfaces.FnacLoadmore;
+import com.fnac.interfaces.GoogleAnalytics;
+import com.fnac.pojo.CategoryInfo;
+import com.fnac.service.CategoryService;
+
+public class Category extends ListActivity implements FnacLoadmore {
+	// Log Tag
+	private final String TAG = "fnac";
+//	//GoogleAnalytics
+//	GoogleAnalyticsTracker tracker;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		GoogleAnalytics.trackPage("/INTRAFNAC - THEMATIQUE", this);
+		setContentView(R.layout.tab_category);
+		Log.d(TAG, "CategoryActivity:onCreate");
+		final String categoryId = getIntent().getStringExtra("categoryId");
+		new Thread() {
+			public void run() {
+				final List<CategoryInfo> categoryInfoList = CategoryService
+						.getInfoList(categoryId);
+
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+
+						setListAdapter(new CategoryViewAdapter(Category.this,
+								categoryInfoList));
+					}
+				});
+			}
+		}.start();
+	}
+
+	@Override
+	public void onBackPressed() {
+		new ExitDialog(this).show();
+	}
+	@Override
+	public void loadMore() {
+
+	}
+}

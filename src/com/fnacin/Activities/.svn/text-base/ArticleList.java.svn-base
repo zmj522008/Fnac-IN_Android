@@ -1,0 +1,191 @@
+package com.fnac.Activity;
+
+import java.util.List;
+
+import android.app.ListActivity;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.TextView;
+import com.fnac.adapter.ArticleViewAdapter;
+import com.fnac.helper.AsyncImageLoader;
+import com.fnac.interfaces.FnacLoadmore;
+import com.fnac.pojo.ArticleInfo;
+import com.fnac.pojo.ArticleParameterInfo;
+import com.fnac.pojo.MutableArticleParameterInfo;
+import com.fnac.service.ArticleService;
+import com.fnac.service.AuthentificationService;
+
+public class ArticleList extends ListActivity implements FnacLoadmore {
+
+	public static enum DisplayType {
+		NORMAL_DISPLAY, FAVOR_DISPLAY
+	}
+	private DisplayType currentType;
+	protected final String TAG = "fnac";
+	private List<ArticleInfo> articleList;
+	private ArticleViewAdapter articleViewAdapter;
+	private int mlayoutResId;
+	private ArticleParameterInfo articleParameterInfo;
+	private View footerView;
+	public ArticleList(int layoutResId, DisplayType displayType) {
+		mlayoutResId = layoutResId;
+		currentType = displayType;
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (!AuthentificationService.getInstance().hasValidInfo()) {
+			Intent intent = new Intent();
+			intent.setClass(this, Login.class);
+			startActivity(intent);
+			finish();
+			return;
+		}
+		setContentView(mlayoutResId);
+		MutableArticleParameterInfo params = new MutableArticleParameterInfo();
+		params.setLimtEnd(FnacLoadmore.pageSize);
+		params.setLimtStart(0);
+		populateArticleParameterInfo(params);
+		articleParameterInfo = new ArticleParameterInfo(params);
+		articleViewAdapter = new ArticleViewAdapter(this, currentType, null);
+		this.getListView().addFooterView(getFooterView());
+		setFooterVisibility(View.INVISIBLE);
+		setListAdapter(articleViewAdapter);
+	}
+
+	// To be overridden to setup sub class specific article parameter infos
+	protected void populateArticleParameterInfo(
+			MutableArticleParameterInfo params) {
+	}
+
+	protected ArticleParameterInfo getCurrentArticleParameterInfo() {
+		return articleParameterInfo;
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		populateListArticle();
+		AsyncImageLoader.getInstance().start();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		AsyncImageLoader.getInstance().stop();
+	}
+	
+	protected void resetViewAdapter() {
+		setListAdapter(articleViewAdapter);
+	}
+
+	public View getFooterView() {
+		if (footerView == null) {
+
+			final LayoutInflater inflater = LayoutInflater.from(this);
+			footerView = inflater.inflate(R.layout.message_list_item_footer,
+					null, false);
+			final TextView textView = (TextView) footerView
+					.findViewById(R.id.main_text);
+			textView.setText(R.string.loadMore);
+			textView.setHeight(60);
+			// if(articleList.size()<20){
+			// footerView.setVisibility(View.INVISIBLE);
+			//
+			// }
+			// Log.d(TAG,"nb_article:"+articleList.size());
+			footerView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					textView.setTextColor(Color.BLACK);
+					loadMore();
+				}
+			});
+		}
+		return footerView;
+	}
+
+	protected void populateListArticle() {
+		new Thread() {
+			public void run() {
+				final List<ArticleInfo> articles = ArticleService
+						.getArticlesInfo(articleParameterInfo);
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						articleList = articles;
+						if (articleList != null) {
+							updateLoadMoreVisibility();
+							if (articleViewAdapter != null) {
+								articleViewAdapter.setArticleList(articleList);
+								articleViewAdapter.notifyDataSetChanged();
+							}
+						}
+					}
+				});
+			}
+		}.start();
+	}
+
+	public void loadMore() {
+		final FnacProgressDialog dialog = new FnacProgressDialog(this);
+		new Thread() {
+			public void run() {
+				if (articleList == null) {
+					return;
+				}
+				final MutableArticleParameterInfo params = new MutableArticleParameterInfo(
+						articleParameterInfo);
+				// Filter
+				// authentificationInfo.getParameterInfo().setPageTotalNum(40);
+				int start = articleList.size();
+				int end = articleList.size() + pageSize;
+				params.setLimtEnd(end);
+				params.setLimtStart(start);
+
+				List<ArticleInfo> articleListTemp = ArticleService
+						.getArticlesInfo(params);
+				Log.i(TAG, "onListItemClick  loading................."
+						+ articleList.size());
+				if (articleListTemp != null && articleListTemp.size() > 0) {
+					for (ArticleInfo info : articleListTemp) {
+						articleList.add(info);
+					}
+					articleViewAdapter.setArticleList(articleList);
+				}
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						updateLoadMoreVisibility();
+						articleViewAdapter.notifyDataSetChanged();
+						dialog.dismiss();
+					}
+				});
+			}
+		}.start();
+	}
+
+	private void setFooterVisibility(final int visibility) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				getFooterView().setVisibility(visibility);
+			}
+		});
+	}
+
+	private void updateLoadMoreVisibility() {
+		if (articleList != null && articleList.size()!=0&&articleList.size() < articleList.get(0)
+				.getNbTotalArticle()) {
+			setFooterVisibility(View.VISIBLE);
+		} else {
+			setFooterVisibility(View.INVISIBLE);							
+		}
+	}
+}

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+	<string name="app_name">Fnac</string>
+	<string name="app_mode_debug">true</string>
+    <string name="TAG">Fnac</string>
+    
+    <!-- **********Login********** -->
+    <string name="LabelVersion">Version</string>
+    <string name="FindPassword">Mot de passe oublié?</string>
+    <string name="LabelEmail">Email</string>
+    <string name="LabelPassword">Mot de passe</string>
+    <string name="LabelContinueBtn">Continuer</string>
+    <string name="LabelSubmit">Se connecter</string>
+    <string name="LabelExit">Quitter</string>
+    <string name="FailedDialogTitle">Erreur</string>
+    <string name="SuccessDialogTitle">Succès</string>
+    <string name="SetPreferenceSuccessMessage">Vos préférences ont bien été sauvegardées</string>
+    <string name="DialogOKButton">OK</string>
+    <string name="DialogFavErrorButton">Cet article est déjà dans vos dossiers</string>
+    <!-- ************************* -->
+    
+    <!-- **********Common********* -->
+    <string name="CanNotConnect">Erreur de communication avec le serveur</string>
+    <!-- ************************* -->
+    
+     <!-- **********FindPassword*********** -->
+      <string name="SentEmailSuccess">Un email vous a été envoyé avec les instructions pour réinitialiser votre mot de passe</string>
+      <string name="newpassword">Nouveau mot de passe</string>
+      <string name="confirmPW">Vérification</string>
+      <string name="PasswordNotSame">Veuillez saisir un mot de passe identique</string>
+      <string name="PasswordSetSuccess">Votre mot de passe a bien été changé</string>
+     <!-- ************************* -->
+     
+     
+    <!-- **********Menu*********** -->
+    <string name="Home">Home</string>
+    <string name="Favor">Préférence</string>
+    <string name="Podcast">Podcast</string>
+    <string name="Category">Thématique</string>
+    <string name="Document">Dossiers</string>
+    <!-- ************************* -->
+     <!-- **********Menu*********** -->
+     <string name="main_home">A la une</string>
+     <string name="main_preference">Préférences</string>
+     <string name="main_podcast">Podcast</string>
+    <string name="main_category">Thématiques</string>   
+    <string name="main_favorite">Autres</string>
+    <string name="map_button">Carte</string>
+     <string name="loadMore">Afficher plus d\'articles...</string>
+    
+     <!-- ***********	************** -->
+    <!-- *********Article********* -->
+    <string name="LabelLikeButton">J’aime</string>
+    <string name="LabelWatchButton">&gt; Lire la vidéo</string>
+    <string name="LabelListenButton">&gt; Ecoute</string>
+    <string name="LabelCommentButton">Réaction</string>
+    <string name="URLERROR">Contenu media invalide</string>
+    <string name="DeleteFavorSuccess">L\'article a bien été retiré de vos dossiers</string>
+    <!-- ************************* -->
+    <!--  -->
+	<string name="LabelEditButton">Editer</string>
+	<string name="LabelAddToContactButton">Ajouter aux contacts</string>
+	<string name="LabelDoneButton">Valider</string>
+    <string name="LabelCancelButton">Annuler</string>
+    <!-- Comment  -->
+    <string name="CommentEditHint">Faire un commentaire</string>
+    <string name="SendComment">Envoyer</string>
+    <string name="commentLabel">commentaires actuellement</string>
+    <string name="CommentButton">Commentaires</string>
+    <string name="LikeButton">J\'aime</string>
+    <string name="AddFavorisButton">&gt; Dossier</string>
+    <string name="LabelOKButton">OK</string>
+    <string name="LabelSuccess">Article Marqué</string>
+    <string name="LabelError">Erreur de communication</string>
+    <string name="SetCommentSuccessMessage">Votre commentaire a été soumis</string>
+    
+    <!-- Quit Dialog -->
+    <string name="ConfirmMessage">Etes vous sur de vouloir quitter l\'application?</string>
+    <string name="ConfirmBtnYes">Oui</string>
+    <string name="ConfirmBtnNo">Non</string>
+     <string name="ConfirmTitle">Confirmation</string>
+    <!-- Progress -->
+    <string name="Progress">Chargement...</string>
+</resources>

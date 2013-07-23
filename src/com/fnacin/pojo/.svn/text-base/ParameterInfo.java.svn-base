@@ -1,0 +1,35 @@
+package com.fnac.pojo;
+
+import java.io.Serializable;
+
+public class ParameterInfo implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7812580846630383445L;
+	private Integer pageTotalNum;
+	private String prePage;
+	private Integer isMandatory;
+	public  final static String SER_KEY = "com.fnac.pojo.ParameterInfo";
+	public Integer getIsMandatory() {
+		return isMandatory;
+	}
+	public void setIsMandatory(Integer isMandatory) {
+		this.isMandatory = isMandatory;
+	}
+	public Integer getPageTotalNum() {
+		return pageTotalNum;
+	}
+	public void setPageTotalNum(Integer pageTotalNum) {
+		this.pageTotalNum = pageTotalNum;
+	}
+	public String getPrePage() {
+		return prePage;
+	}
+	public void setPrePage(String prePage) {
+		this.prePage = prePage;
+	}
+	
+	
+}

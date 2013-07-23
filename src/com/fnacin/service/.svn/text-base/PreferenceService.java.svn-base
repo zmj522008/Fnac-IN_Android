@@ -1,0 +1,89 @@
+package com.fnac.service;
+
+import java.io.InputStream;
+import java.util.List;
+import org.apache.http.NameValuePair;
+import android.util.Log;
+import com.fnac.helper.PreferenceHelper;
+import com.fnac.helper.UrlHelper;
+import com.fnac.pojo.CategoryInfo;
+import com.fnac.pojo.SetPreferenceResultInfo;
+
+
+public class PreferenceService  extends BaseService{
+	// Log Tag
+	
+	public static final String SUCCESS = "success";
+	public static final String ERROR = "error";
+
+	public String[] getCategoryList(List<CategoryInfo> categoryInfoList)
+			throws Exception {
+		Log.d(TAG, "Return CategoryViewAdapter");
+		String[] retStr = new String[categoryInfoList.size()];
+		for (int i = 0; i < categoryInfoList.size(); i++) {
+			retStr[i] = categoryInfoList.get(i).getCategory();
+		}
+		Log.d(TAG, "get retStr:"+retStr.toString());
+		return retStr;
+	}
+
+
+	public static List<CategoryInfo> getCategoryInfoList(
+			 String element){
+		List<NameValuePair> nameValuePairs = setupHttpValuePairs();
+
+		addValuePair(nameValuePairs, "element", element);
+		
+		InputStream inputStream = doServiceRequest(UrlHelper.GETPREFERENCE, nameValuePairs);
+
+		List<CategoryInfo> categoryInfoList=null;
+		try {
+			categoryInfoList = PreferenceHelper
+					.ReadXmlByPull(inputStream);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Log.d(TAG, "get categoryInfoList:"+categoryInfoList.toString());
+		return categoryInfoList;
+	}
+
+	public static String setPreference(
+			String categoryIds) {
+		
+		List<NameValuePair> nameValuePairs = setupHttpValuePairs();
+		addValuePair(nameValuePairs, "type", "rubrique");
+		addValuePair(nameValuePairs, "rubrique_ids", categoryIds);
+
+		Log.d(TAG, "get rubrique_ids="+categoryIds);
+		InputStream inputStream = doServiceRequest(UrlHelper.SETPREFERENCE, nameValuePairs);
+		try {
+		
+			SetPreferenceResultInfo setPreferenceResultInfo = PreferenceHelper
+					.getSetPreferenceResult(inputStream);
+			if (setPreferenceResultInfo != null) {
+				// 0 is success
+				if ("0".equals(setPreferenceResultInfo.getResult())) {
+					Log.d(TAG, "PreferenceService setPreference success");
+					return SUCCESS;
+				} else { // return the error message
+					Log.d(TAG, "PreferenceService setPreference failed");
+					if (setPreferenceResultInfo.getErrorInfo() != null) {
+						return setPreferenceResultInfo.getErrorInfo()
+								.getMessage();
+					}
+				}
+			} else {
+				Log.d(TAG,
+						"PreferenceService setPreference cannot connecto server");
+				return ERROR;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.d(TAG, "PreferenceService get connect failed:" + e.getMessage());
+		}
+		return null;
+	}
+	
+}

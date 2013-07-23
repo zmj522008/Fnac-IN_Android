@@ -1,0 +1,237 @@
+package com.fnac.pojo;
+
+import java.io.Serializable;
+
+
+public class PersonInfo implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public final static String SER_KEY = "com.fnac.pojo.personinfo";
+	public String firstname;
+	public String id;
+	public String lastname;
+	public String civilite;
+	public String tel_fixe;
+	public String tel_interne;
+	public String tel_mobile;
+	public String fax;
+	public String email;
+	public String phoneDigits;
+	
+	public PersonInfo(String id,String lastname,String firstname,  
+			String civilite, String tel_fixe, String tel_interne,
+			String tel_mobile, String fax, String email, String num_bureau,
+			String fonction, String site, String adresse, String cp, String ville,
+			String commentaire, String site_nom, String site_pays,
+			String site_region) {
+		super();
+		this.firstname = firstname;
+		this.id = id;
+		this.lastname = lastname;
+		this.civilite = civilite;
+		this.tel_fixe = tel_fixe;
+		this.tel_interne = tel_interne;
+		this.tel_mobile = tel_mobile;
+		this.fax = fax;
+		this.email = email;
+		this.num_bureau = num_bureau;
+		this.fonction = fonction;
+		this.site = site;
+		this.adresse = adresse;
+		this.cp = cp;
+		this.ville = ville;
+		this.commentaire = commentaire;
+		this.site_nom = site_nom;
+		this.site_pays = site_pays;
+		this.site_region = site_region;
+	}
+
+	public String num_bureau;
+	public String fonction;
+	public String site;
+	public String adresse;
+	public String cp;
+	public String ville;
+	public String commentaire;
+	public String site_nom;
+	public String site_pays;
+	public String site_region;
+	public String getCivilite() {
+		return civilite;
+	}
+
+	public void setCivilite(String civilite) {
+		this.civilite = civilite;
+	}
+
+	public String getTel_fixe() {
+		return tel_fixe;
+	}
+
+	public void setTel_fixe(String tel_fixe) {
+		this.tel_fixe = tel_fixe;
+	}
+
+	public String getTel_interne() {
+		return tel_interne;
+	}
+
+	public void setTel_interne(String tel_interne) {
+		this.tel_interne = tel_interne;
+	}
+
+	public String getTel_mobile() {
+		return tel_mobile;
+	}
+
+	public void setTel_mobile(String tel_mobile) {
+		this.tel_mobile = tel_mobile;
+	}
+
+	public String getFax() {
+		return fax;
+	}
+
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getNum_bureau() {
+		return num_bureau;
+	}
+
+	public void setNum_bureau(String num_bureau) {
+		this.num_bureau = num_bureau;
+	}
+
+	public String getFonction() {
+		return fonction;
+	}
+
+	public void setFonction(String fonction) {
+		this.fonction = fonction;
+	}
+
+	public String getSite() {
+		return site;
+	}
+
+	public void setSite(String site) {
+		this.site = site;
+	}
+
+	public String getAdresse() {
+		return adresse;
+	}
+
+	public void setAdresse(String adresse) {
+		this.adresse = adresse;
+	}
+
+	public String getVille() {
+		return ville;
+	}
+
+	public void setVille(String v) {
+		this.ville = v;
+	}
+	
+	public String getCp() {
+		return cp;
+	}
+
+	public void setCp(String cp) {
+		this.cp = cp;
+	}
+
+	public String getCommentaire() {
+		return commentaire;
+	}
+
+	public void setCommentaire(String commentaire) {
+		this.commentaire = commentaire;
+	}
+
+	public String getSite_nom() {
+		return site_nom;
+	}
+
+	public void setSite_nom(String site_nom) {
+		this.site_nom = site_nom;
+	}
+
+	public String getSite_pays() {
+		return site_pays;
+	}
+
+	public void setSite_pays(String site_pays) {
+		this.site_pays = site_pays;
+	}
+
+	public String getSite_region() {
+		return site_region;
+	}
+
+	public void setSite_region(String site_region) {
+		this.site_region = site_region;
+	}
+
+	public PersonInfo(String firstname, String id, String lastname) {
+		super();
+		this.firstname = firstname;
+		this.id = id;
+		this.lastname = lastname;
+	}
+
+	public PersonInfo() {
+		super();
+	}
+
+	
+	public PersonInfo(String lastname) {
+		super();
+		this.lastname = lastname;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getPhoneDigits() {
+		return phoneDigits;
+	}
+
+	public void setPhoneDigits(String phoneDigits) {
+		this.phoneDigits = phoneDigits;
+	}
+}

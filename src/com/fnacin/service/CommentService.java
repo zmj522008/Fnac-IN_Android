@@ -1,0 +1,51 @@
+package com.fnacin.service;
+
+import java.io.InputStream;
+import java.util.List;
+import org.apache.http.NameValuePair;
+import android.util.Log;
+import com.fnacin.helper.SetCommentResultHelper;
+import com.fnacin.helper.UrlHelper;
+import com.fnacin.pojo.ErrorInfo;
+import com.fnacin.pojo.SetCommentResultInfo;
+
+public class CommentService extends BaseService{
+	// Log Tag
+	private final String TAG = "fnac";
+
+	public String setComment(String articleId, String commentContent) {
+
+		List<NameValuePair> nameValuePairs = setupHttpValuePairs();
+		addValuePair(nameValuePairs, "article_id", articleId);
+		addValuePair(nameValuePairs, "commentaire", commentContent);
+		InputStream inputStream = doServiceRequest(UrlHelper.SETCOMMENT,
+				nameValuePairs);
+
+		try {
+			Log.d(TAG, "CommentService get the result to SetCommentResultInfo");
+			SetCommentResultInfo setCommentResultInfo = SetCommentResultHelper
+					.getSetCommentResultInfo(inputStream);
+			if (setCommentResultInfo != null) {
+				// 0 is success
+				ErrorInfo errorInfo = setCommentResultInfo.getErrorInfo();
+				if (errorInfo == null || "0".equals(errorInfo.getCode())) {
+					Log.d(TAG, "CommentService setComment success");
+					return SUCCESS;
+				} else { // return the error message
+					Log.d(TAG, "CommentService setComment failed");
+					if (errorInfo != null) {
+						return errorInfo.getMessage();
+					}
+				}
+			} else {
+				Log.d(TAG, "CommentService setComment cannot connect to server");
+				return ERROR;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.d(TAG, "CommentService get connect failed:" + e.getMessage());
+		}
+		return null;
+	}
+
+}

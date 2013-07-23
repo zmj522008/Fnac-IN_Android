@@ -1,0 +1,494 @@
+package com.fnac.Activity;
+
+import java.util.List;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.text.Html;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.fnac.adapter.CommentViewList;
+import com.fnac.helper.AsyncImageLoader;
+import com.fnac.interfaces.GoogleAnalytics;
+import com.fnac.pojo.ArticleInfo;
+import com.fnac.pojo.AuthentificationInfo;
+import com.fnac.pojo.CommentInfo;
+import com.fnac.pojo.FavorParameterInfo;
+import com.fnac.service.AuthentificationService;
+import com.fnac.service.BaseService;
+import com.fnac.service.CommentService;
+import com.fnac.service.GetCommentService;
+import com.fnac.service.SetFavorService;
+import com.fnac.service.SetLikeService;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
+public class DisplayArticle extends Activity {
+	private static String TAG = "fnac";
+	private TextView commentbtn = null;
+	private TextView favbtn = null;
+	private Button returnbtn = null;
+	private Button watchbtn = null;
+	private TextView setLikebtn = null;
+	private TextView articleContent = null;
+	private TextView submitButton;
+	private Activity mainListView;
+	private TextView commentContent;
+	private CommentViewList commentViewList;
+	private String articleId;
+	private LinearLayout commentListLayout;
+	private ArticleInfo articleInfo;
+	private Button  toggleCommentVisiblity;
+	private TextView nb_comments;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		//GoogleAnalytics
+		setContentView(R.layout.article_detail);
+		articleInfo = (ArticleInfo) getIntent().getSerializableExtra(
+				ArticleInfo.SER_KEY);
+		//GoogleAnalytics
+		GoogleAnalytics.trackPage("/ INTRAFNAC - ARTICLE /" +
+				 articleInfo.getTitle(), this);
+		// comment
+		commentListLayout = (LinearLayout) findViewById(R.id.commentList);
+		submitButton = (TextView) findViewById(R.id.btnOK);
+		submitButton.setOnClickListener(new SubmitButtonOnClickListener());
+		articleId = articleInfo.getId();
+		Log.d(TAG, "CommentActivity setAdapter length:"
+				+ articleInfo.getCommentsList().size());
+		Log.d(TAG, "CommentActivity addHeaderView");
+		// View view =
+		// LayoutInflater.from(this).inflate(R.layout.comment_header, null);
+		commentContent = (TextView) this.findViewById(R.id.content);
+		toggleCommentVisiblity = (Button) this
+				.findViewById(R.id.add_comment_button);
+		toggleCommentVisiblity
+				.setOnClickListener(new ToggleCommentVisiblityClickListener());
+		// detail
+		commentbtn = (TextView) findViewById(R.id.article_comment_btn);
+		nb_comments=(TextView) this.findViewById(R.id.nb_comments);
+		favbtn = (TextView) findViewById(R.id.article_favoris_btn);
+		favbtn.setText(this.getString(R.string.AddFavorisButton));
+		favbtn.setOnClickListener(new FavbtnListener(articleInfo));
+		watchbtn = (Button) this.findViewById(R.id.detail_watch_button);
+		watchbtn.setOnClickListener(new WatchButtonOnClickListener(this,
+				articleInfo));
+		setLikebtn = (TextView) findViewById(R.id.article_like_btn);
+		setLikebtn.setOnClickListener(new LikebtnListener(articleInfo));
+		final ArticleImageView imageView = (ArticleImageView) findViewById(R.id.article_image);
+		imageView.setArticleInfo(articleInfo);
+		if ("1".equals(articleInfo.getTypeId())) {
+			watchbtn.setVisibility(View.INVISIBLE);
+		} else {
+			watchbtn.setOnClickListener(new WatchButtonOnClickListener(this,
+					articleInfo));
+			imageView.setOnClickListener(new WatchButtonOnClickListener(this,
+					articleInfo));
+		}
+		// get category
+		TextView articleCate = (TextView) findViewById(R.id.article_cate);
+		articleCate.setText(articleInfo.getCategory());
+		// get theme
+		TextView articleTheme = (TextView) findViewById(R.id.article_theme);
+		articleTheme.setText(articleInfo.getTheme());
+		// get title
+		TextView articleTitle = (TextView) findViewById(R.id.article_title);
+		articleTitle.setText(articleInfo.getTitle());
+		// get content
+		articleContent = (TextView) findViewById(R.id.article_content);
+		articleContent.setText(Html.fromHtml(articleInfo.getAccroche() + "\n\n"
+				+ articleInfo.getContent()));
+		// Comments disabled 8/01/2012
+		//updateComments();
+		updateLikeButton();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		AsyncImageLoader.getInstance().start();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		AsyncImageLoader.getInstance().stop();
+	}
+	
+	private void updateLikeButton() {
+		setLikebtn.setText(this.getString(R.string.LikeButton) + " ("
+				+ articleInfo.getNb_like() + ")");
+	}
+
+	private void updateComments() {
+		commentbtn.setText(this.getString(R.string.CommentButton) + " ("
+				+ articleInfo.getNb_comment() + ")");
+		nb_comments.setText("("+articleInfo.getNb_comment()+" "+this.getString(R.string.commentLabel)+")");
+		new Thread() {
+			public void run() {
+				final List<CommentInfo> commentList = GetCommentService
+						.getInfoList(articleId);
+				runOnUiThread(new Runnable() {
+
+					@Override
+					public void run() {
+						if (commentViewList == null) {
+							commentViewList = new CommentViewList(
+									DisplayArticle.this, commentList);
+
+						} else {
+							commentViewList.setList(commentList);
+						}
+						List<View> list = commentViewList.getViews();
+						commentListLayout.removeAllViews();
+						for (View v : list) {
+							commentListLayout.addView(v);
+						}
+					}
+				});
+			}
+		}.start();
+	}
+
+	private void onCommentResult(String ret) {
+		if (ret == BaseService.SUCCESS) {
+			AlertDialog.Builder alterDialog = new AlertDialog.Builder(
+					DisplayArticle.this);
+			alterDialog.setTitle(R.string.SuccessDialogTitle);
+			alterDialog.setPositiveButton(R.string.DialogOKButton,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int i) {
+							articleInfo.setNb_comment(Integer.toString(Integer
+									.parseInt(articleInfo.getNb_comment()) + 1));
+							updateComments();
+						}
+					});
+			alterDialog.setMessage(R.string.SetCommentSuccessMessage);
+			alterDialog.show();
+
+		} else {
+
+			AlertDialog.Builder alterDialog = new AlertDialog.Builder(
+					DisplayArticle.this);
+			alterDialog.setTitle(R.string.FailedDialogTitle);
+			alterDialog.setPositiveButton(R.string.DialogOKButton,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int i) {
+
+						}
+					});
+			alterDialog.setMessage(R.string.LabelError);
+			alterDialog.show();
+		}
+	}
+
+	private void onLikeResult(String ret) {
+		if (SetLikeService.SUCCESS.equals(ret)) {
+			// Call a dialog
+			AlertDialog.Builder alterDialog = new AlertDialog.Builder(
+					DisplayArticle.this);
+			alterDialog.setTitle(R.string.SuccessDialogTitle);
+			alterDialog.setPositiveButton(R.string.DialogOKButton,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int i) {
+							// finish();
+						}
+					});
+			alterDialog.setMessage(R.string.LabelSuccess);
+			alterDialog.show();
+			articleInfo.setNb_like(Integer.toString(Integer
+					.parseInt(articleInfo.getNb_like()) + 1));
+			updateLikeButton();
+			// Change to article page
+		} else if (SetLikeService.ERROR.equals(ret)) {
+			// Call a dialog
+			AlertDialog.Builder alterDialog = new AlertDialog.Builder(
+					DisplayArticle.this);
+			alterDialog.setTitle(R.string.FailedDialogTitle);
+			alterDialog.setPositiveButton(R.string.DialogOKButton,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int i) {
+							// finish();
+						}
+					});
+			// alterDialog.setMessage(R.string.FailedDialogTitle);
+			alterDialog.show();
+		} else {
+			// Call a dialog
+			AlertDialog.Builder alterDialog = new AlertDialog.Builder(
+					DisplayArticle.this);
+			alterDialog.setTitle(R.string.FailedDialogTitle);
+			alterDialog.setPositiveButton(R.string.DialogOKButton,
+					new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int i) {
+						}
+					});
+			alterDialog.setMessage(ret);
+			alterDialog.show();
+		}
+	}
+
+	class ToggleCommentVisiblityClickListener implements OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			if (commentContent.getVisibility() == View.GONE&&submitButton.getVisibility()==View.GONE) {
+				commentContent.setVisibility(View.VISIBLE);
+				submitButton.setVisibility(View.VISIBLE);
+				toggleCommentVisiblity.setVisibility(View.GONE);
+				nb_comments.setVisibility(View.GONE);
+			} else {
+				
+				submitButton.setVisibility(View.GONE);
+			}
+		}
+
+	}
+
+	
+	@Override
+	public void onBackPressed() {
+		if (submitButton.getVisibility() == View.VISIBLE) {
+			submitButton.setVisibility(View.GONE);
+			toggleCommentVisiblity.setVisibility(View.VISIBLE);
+			commentContent.setVisibility(View.GONE);
+			nb_comments.setVisibility(View.VISIBLE);
+		} else {
+			finish();
+		}
+	} 
+	
+	
+	
+	
+	
+	class FavbtnListener implements OnClickListener {
+		protected final ArticleInfo articleInfo;
+
+		public FavbtnListener(ArticleInfo articleInfo) {
+			this.articleInfo = articleInfo;
+		}
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			FavorParameterInfo favorParameterInfo = (FavorParameterInfo) getIntent()
+					.getSerializableExtra(FavorParameterInfo.SER_KEY);
+			if (favorParameterInfo == null) {
+				favorParameterInfo = new FavorParameterInfo();
+			}
+			final String articleId = articleInfo.getId();
+			final SetFavorService setFavorService = new SetFavorService();
+			new Thread() {
+				public void run() {
+					final String ret = setFavorService.setFavor(articleId);
+
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							onFavReslult(ret);
+						}
+					});
+				}
+			}.start();
+
+		}
+
+		private void onFavReslult(String ret) {
+			if (SetFavorService.SUCCESS.equals(ret)) {
+				// Call a dialog
+				Integer fav = Integer.parseInt(articleInfo.getFavor());
+				switch (fav) {
+				case 1:
+					AlertDialog.Builder alterDialog = new AlertDialog.Builder(
+							DisplayArticle.this);
+					alterDialog.setTitle(R.string.FailedDialogTitle);
+					alterDialog.setPositiveButton(R.string.DialogOKButton,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int i) {
+								}
+							});
+					alterDialog.setMessage(R.string.DialogFavErrorButton);
+					alterDialog.show();
+					break;
+				case 0:
+
+					AlertDialog.Builder alterDialog1 = new AlertDialog.Builder(
+							DisplayArticle.this);
+					alterDialog1.setTitle(R.string.SuccessDialogTitle);
+					alterDialog1.setPositiveButton(R.string.DialogOKButton,
+							new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog,
+										int i) {
+
+								}
+							});
+					alterDialog1.setMessage(R.string.LabelSuccess);
+					alterDialog1.show();
+					break;
+				default:
+					break;
+				// Change to article page
+				}
+			} else if (SetFavorService.ERROR.equals(ret)) {
+				// Call a dialog
+				AlertDialog.Builder alterDialog = new AlertDialog.Builder(
+						mainListView.getBaseContext());
+				alterDialog.setTitle(R.string.FailedDialogTitle);
+				alterDialog.setPositiveButton(R.string.DialogOKButton,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int i) {
+								// finish();
+							}
+						});
+				alterDialog.setMessage(R.string.CanNotConnect);
+				alterDialog.show();
+			} else {
+				// Call a dialog
+				AlertDialog.Builder alterDialog = new AlertDialog.Builder(
+						mainListView.getBaseContext());
+				alterDialog.setTitle(R.string.CanNotConnect);
+				alterDialog.setPositiveButton(R.string.FailedDialogTitle,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int i) {
+							}
+						});
+				alterDialog.setMessage(ret);
+				alterDialog.show();
+			}
+		}
+
+	}
+
+	class WatchButtonOnClickListener implements OnClickListener {
+		protected final ArticleInfo articleInfo;
+		protected final Context context;
+
+		public WatchButtonOnClickListener(Context context,
+				ArticleInfo articleInfo) {
+			this.articleInfo = articleInfo;
+			this.context = context;
+		}
+
+		@Override
+		public void onClick(View v) {
+			Log.d(TAG, "Read media from server");
+			String url = articleInfo.getUrl_media();
+			int a = url.lastIndexOf(".");
+			String b = url.substring(a, url.length());
+			Log.d(TAG, a + " | " + b);
+			if (b.toLowerCase().equals(".mp4")
+					|| b.toLowerCase().equals(".3gp")
+					|| b.toLowerCase().equals(".wmv")) {
+				Log.d(TAG, "Watch:" + url);
+				Uri uri = Uri.parse(url);
+
+				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+				// intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.setType("video/*");
+				intent.setDataAndType(uri, "video/*");
+				context.startActivity(intent);
+			} else if (b.toLowerCase().equals(".mp3")) {
+				Log.d(TAG, "Listen:" + url);
+				Uri uri = Uri.parse(url);
+				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+				// intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.setType("audio/mp3");
+				intent.setDataAndType(uri, "audio/mp3");
+				context.startActivity(intent);
+			} else {
+				Toast.makeText(context, R.string.URLERROR, Toast.LENGTH_SHORT)
+						.show();
+			}
+		}
+	}
+
+	class LikebtnListener implements OnClickListener {
+		protected final ArticleInfo articleInfo;
+
+		public LikebtnListener(ArticleInfo articleInfo) {
+			this.articleInfo = articleInfo;
+		}
+
+		@Override
+		public void onClick(View v) {
+			final FnacProgressDialog dialog = new FnacProgressDialog(
+					DisplayArticle.this);
+
+			final String articleId = articleInfo.getId();
+			final SetLikeService setLikeService = new SetLikeService();
+			new Thread() {
+				public void run() {
+					final String ret = setLikeService.setLike(articleId);
+
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							dialog.dismiss();
+							onLikeResult(ret);
+						}
+					});
+				}
+			}.start();
+
+		}
+
+	}
+
+	class SubmitButtonOnClickListener implements OnClickListener {
+
+		ArticleInfo articleInfo = (ArticleInfo) getIntent()
+				.getSerializableExtra(ArticleInfo.SER_KEY);
+		AuthentificationInfo authentificationInfo = AuthentificationService
+				.getInstance().getAuthentificationInfo();
+
+		@Override
+		public void onClick(View v) {
+			final FnacProgressDialog dialog = new FnacProgressDialog(
+					DisplayArticle.this);
+			submitButton.setVisibility(View.GONE);
+			toggleCommentVisiblity.setVisibility(View.VISIBLE);
+			nb_comments.setVisibility(View.VISIBLE);
+			Log.d(TAG, "CommentActivity SubmitButtonOnClickListener onClick");
+			final String content = commentContent.getText().toString();
+			final CommentService commetnService = new CommentService();
+			final String articleId = articleInfo.getId();
+			new Thread() {
+				public void run() {
+					final String ret = commetnService.setComment(articleId,
+							content);
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							dialog.dismiss();
+							onCommentResult(ret);
+							commentContent.setVisibility(View.GONE);
+						}
+					});
+				}
+			}.start();
+		}
+	}
+}

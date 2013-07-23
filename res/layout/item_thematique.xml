@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+  	android:background="#FFFFFF"
+    android:paddingLeft="3dp"
+	android:paddingTop="3dp"
+	android:paddingBottom="3dp"
+	android:paddingRight="3dp">	
+	  <LinearLayout 
+        android:id="@+id/ll_thematique" 
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+         <RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+  	android:background="#FFFFFF"
+    android:paddingLeft="5dp"
+	android:paddingTop="5dp"
+	android:paddingBottom="5dp"
+	android:paddingRight="5dp">
+	<TextView android:id="@+id/thematique_name"
+		
+		android:textColor="#000000"
+		android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true"
+		android:layout_width="wrap_content"
+		android:textSize="20sp"/>
+	<TextView	android:id="@+id/the_Detail_btn"
+		android:background="@drawable/detail_btn"
+		android:layout_alignParentRight="true"
+		android:layout_width="wrap_content"
+		android:layout_height="fill_parent"
+	/>
+		
+      </RelativeLayout>
+	</LinearLayout>
+	
+</RelativeLayout>

@@ -1,0 +1,16 @@
+package com.fnac.Activity;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+
+public class FnacProgressDialog extends ProgressDialog {
+
+	public FnacProgressDialog(Context context) {
+		super(context);
+		setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		setMessage(context.getString(R.string.Progress));
+		this.setIndeterminate(true);
+		show();
+	}
+
+}

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:background="#FFFFFF" android:paddingLeft="3dp"
+	android:paddingTop="3dp" android:paddingBottom="3dp"
+	android:gravity="center_vertical"
+	android:paddingRight="3dp">
+	<TextView android:id="@+id/article_cate" android:background="#EBB400"
+		android:layout_gravity="center_vertical" android:gravity="center_horizontal"
+		android:textColor="#FFFFFF" android:paddingLeft="5dp"
+		android:paddingRight="5dp" android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:textSize="15sp" />
+	<TextView android:id="@+id/article_theme"
+		android:layout_gravity="center_vertical" android:layout_toRightOf="@id/article_cate"
+		android:layout_marginLeft="5dp" android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:textColor="#000000"
+		android:textSize="15sp" />
+	<TextView android:textColor="#000000" android:id="@+id/article_title"
+		android:layout_below="@id/article_cate" android:layout_marginTop="1dp"
+		android:gravity="left" android:singleLine="true"
+		android:layout_height="wrap_content" android:layout_width="fill_parent"
+		android:textSize="16sp" />
+	<com.fnac.Activity.ArticleImageView android:id="@+id/article_image"
+		android:layout_below="@id/article_title" android:layout_marginTop="5dp"
+        android:background="@drawable/loading_detail" android:scaleType="fitXY"
+		android:layout_width="250dp" android:layout_height="150dp"
+		 />
+	<Button android:id="@+id/article_watch" android:text="@string/LabelWatchButton"
+		android:background="#EBB400" android:textColor="#FFFFFF"
+		android:textSize="15sp" android:gravity="center" 
+		android:layout_height="30dp" android:layout_width="250dp"
+		android:layout_alignLeft="@+id/article_image" android:layout_below="@id/article_image" />
+	<TextView android:id="@+id/article_content"
+		android:layout_height="65dp" android:lineSpacingMultiplier="1.5"
+		android:layout_width="wrap_content" android:layout_toRightOf="@+id/article_image"
+		android:layout_marginLeft="10dp" android:paddingRight="10dp"
+		android:layout_below="@id/article_title" android:layout_marginTop="5dp"
+		android:textColor="#000000" android:textSize="14sp" />
+	<Button android:id="@+id/article_like_btn"
+		android:layout_marginLeft="15dp" android:layout_marginTop="5dp"
+		android:background="@drawable/like_btn" android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:layout_below="@+id/article_content"
+		android:layout_alignBaseline="@+id/article_watch"
+		android:layout_toRightOf="@+id/article_watch" />
+	<TextView android:id="@+id/article_like" android:text="@string/LabelLikeButton"
+		android:layout_marginTop="5dp" android:layout_toRightOf="@+id/article_like_btn"
+		android:layout_marginLeft="2dp" android:layout_below="@id/article_content"
+		android:layout_alignBaseline="@+id/article_like_btn"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:textColor="#000000" android:textSize="15sp" />
+	<TextView android:id="@+id/nb_like" android:layout_toRightOf="@id/article_like"
+		android:layout_marginLeft="3dp" android:layout_marginTop="5dp"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:textColor="#000000" android:layout_alignBaseline="@+id/article_like_btn"
+		android:textSize="15sp" />
+	<Button android:id="@+id/article_comment_btn"
+		android:layout_marginLeft="10dp" android:layout_marginTop="5dp"
+		android:background="@drawable/comment_btn" android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:layout_below="@+id/article_content"
+		android:layout_toRightOf="@+id/nb_like" android:layout_alignBaseline="@+id/article_like_btn" 
+		android:visibility="gone" />
+	<TextView android:id="@+id/article_comment" android:text="@string/LabelCommentButton"
+		android:layout_marginTop="5dp" android:layout_toRightOf="@+id/article_comment_btn"
+		android:layout_marginLeft="2dp" android:layout_below="@id/article_content"
+		android:layout_alignBaseline="@+id/article_like_btn"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:textColor="#000000" android:textSize="15sp" 
+		android:visibility="gone" />
+	<TextView android:id="@+id/nb_comment"
+		android:layout_toRightOf="@+id/article_comment"
+		android:layout_marginLeft="3dp" android:layout_marginTop="5dp"
+		android:layout_alignBaseline="@+id/article_like_btn"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:textColor="#000000" android:textSize="15sp" 
+		android:visibility="gone" />
+	<Button android:id="@+id/btnDetail"
+		android:layout_alignParentRight="true" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:background="@drawable/detail_btn"
+		android:textSize="30dp"
+		android:layout_centerVertical="true" />
+	<TextView android:id="@+id/fav_delete_favor"
+	    android:background="@drawable/delete_fav"
+	    android:layout_below="@+id/article_watch"
+		android:layout_alignParentLeft="true"
+		android:layout_marginLeft="3dp"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		/>
+</RelativeLayout>	
+	
+	
+	

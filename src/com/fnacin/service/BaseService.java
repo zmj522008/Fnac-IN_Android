@@ -1,0 +1,112 @@
+package com.fnacin.service;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import android.os.Looper;
+import android.util.Log;
+import com.fnacin.pojo.AuthentificationInfo;
+
+public class BaseService {
+	protected static final String TAG = "fnac";
+	private static final int timeoutConnection = 30000;
+
+	public static final String SUCCESS = "success";
+	public static final String ERROR = "error";
+
+	protected final static InputStream doServiceRequest(
+			String serviceUrl, List<NameValuePair> nameValuePairs) {
+		return doServiceRequest(serviceUrl, nameValuePairs, timeoutConnection);
+	}
+	
+	protected final static InputStream doServiceRequest(
+			String serviceUrl, List<NameValuePair> nameValuePairs,
+			int timeout) {
+		Log.d(TAG, "doServiceRequest: " + serviceUrl);
+		if (Looper.myLooper() == Looper.getMainLooper()) {
+			throw new IllegalStateException("in ui thread");
+		}
+		HttpPost httpPost = new HttpPost(serviceUrl);
+		HttpParams httpParameters;
+		httpParameters = new BasicHttpParams(); // Set the timeout in
+												// milliseconds until a
+												// connection is established.
+		HttpConnectionParams.setConnectionTimeout(httpParameters,
+				timeout);
+		HttpClient httpClient = new DefaultHttpClient(httpParameters);
+
+		InputStream inputStream = null;
+		try {
+			httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+			HttpResponse response = httpClient.execute(httpPost);
+
+			inputStream = response.getEntity().getContent();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return inputStream;
+	}
+
+	protected final static List<NameValuePair> setupHttpValuePairs() {
+		AuthentificationInfo authentificationInfo = AuthentificationService.getInstance()
+		.getAuthentificationInfo();
+
+		// Generate Parameter To Get Article
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		if (authentificationInfo != null) {
+			String sessionId = authentificationInfo.getSessionId();
+			if (sessionId != null) {
+				addValuePair(nameValuePairs, "session_id", sessionId);
+			}
+		}
+		addValuePair(nameValuePairs, "materiel", "android");
+		return nameValuePairs;
+	}
+	protected final static List<NameValuePair> setupHttpValuePairsFavor() {
+		AuthentificationInfo authentificationInfo = AuthentificationService.getInstance()
+		.getAuthentificationInfo();
+
+		// Generate Parameter To Get Article
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		if (authentificationInfo != null) {
+			String sessionId = authentificationInfo.getSessionId();
+			if (sessionId != null) {
+				addValuePair(nameValuePairs, "session_id", sessionId);
+			}
+			addValuePair(nameValuePairs,"favoris","1");
+		}
+		addValuePair(nameValuePairs, "materiel", "android");
+		return nameValuePairs;
+	}
+	protected static void addValuePair(List<NameValuePair> list, String wsGetKey,
+			String value) {
+		if (value != null) {
+			list.add(new BasicNameValuePair(wsGetKey, value));
+			Log.d(TAG, wsGetKey + " = " + value);
+		}
+	}
+	
+}

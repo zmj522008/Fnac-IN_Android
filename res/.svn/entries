@@ -1,0 +1,56 @@
+10
+
+dir
+9
+svn://10.8.16.64/fnac/Fnac/res
+svn://10.8.16.64/fnac
+
+
+
+2012-05-09T14:01:26.514336Z
+9
+camille
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+69d88f5d-99a5-4019-89ae-958c100f6ca1
+
+
+
+
+
+
+0
+
+drawable-hdpi
+dir
+
+drawable-ldpi
+dir
+
+drawable-mdpi
+dir
+
+drawable-xhdpi
+dir
+
+layout
+dir
+
+layout-xlarge
+dir
+
+values
+dir
+

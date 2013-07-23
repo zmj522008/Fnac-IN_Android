@@ -1,0 +1,42 @@
+package com.fnac.Activity;
+
+import com.fnac.interfaces.GoogleAnalytics;
+import com.fnac.pojo.MutableArticleParameterInfo;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
+import android.os.Bundle;
+import android.util.Log;
+public class Favorite extends ArticleList {
+	private final String TAG = "fnac";
+//	//GoogleAnalytics
+//	GoogleAnalyticsTracker tracker;
+	public Favorite() {
+		super(R.layout.tab_favorite, DisplayType.FAVOR_DISPLAY);
+	
+	}
+
+	// Log Tag
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG, "Favorite:onCreate");
+		super.onCreate(savedInstanceState);
+		GoogleAnalytics.trackPage("/INTRAFNAC - FAVORIS", this);
+	}
+
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		populateListArticle();
+	}
+	
+	protected void populateArticleParameterInfo(MutableArticleParameterInfo params) {
+		params.setFavor("1");
+	}
+	
+//	@Override
+//	public void onBackPressed() {
+//		new ExitDialog(this).show();
+//	} 
+	
+}

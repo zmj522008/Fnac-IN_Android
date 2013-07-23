@@ -1,0 +1,33 @@
+package com.fnac.Activity;
+
+import com.fnac.interfaces.GoogleAnalytics;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
+import android.os.Bundle;
+import android.util.Log;
+
+public class Home extends ArticleList {
+	public Home() {
+		super(R.layout.tab_home, DisplayType.NORMAL_DISPLAY);
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG, "HomeActivity:onCreate");
+		super.onCreate(savedInstanceState);
+		GoogleAnalytics.trackPage("/INTRAFNAC - HOME", this);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		populateListArticle();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		new ExitDialog(this).show();
+	} 
+	
+
+}

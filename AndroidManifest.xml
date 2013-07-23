@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.fnacin.Activities"
+    android:versionCode="20"
+    android:versionName="2.0" >
+
+    <uses-sdk android:minSdkVersion="8" />
+
+    <permission
+        android:name="com.fnacin.Activities.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.fnacin.Activities.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <!-- GCM requires a Google account. -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <!-- Keeps the processor from sleeping when a message is received. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Creates a custom permission so only this app can receive its messages. -->
+    <permission
+        android:name="com.fnacin.Activities.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.fnacin.Activities.permission.C2D_MESSAGE" />
+
+    <!-- This app has permission to register and receive data message. -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <!-- Permission to vibrate -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <application
+        android:debuggable="false"
+        android:icon="@drawable/ico_fnacin"
+        android:label="@string/app_name" >
+
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBfAq4lUojNVSOp6O5OSQ_ZzRNBK7jhZ8g" />
+
+        <activity
+            android:name="com.fnacin.Activities.Welcome"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.fnacin.Activities.Login"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.fnacin.Activities.MainPage"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.Home"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.ArticleGroup"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.FavoGroup"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+         <activity
+            android:name="com.fnacin.Activities.PersonGroup"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.StoreGroup"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.OthersGroup"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.Preference"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.Thematique"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.fnacin.Activities.PrePage"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.Podcast"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.Person"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.fnacin.Activities.Category"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.Favorite"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.RefindPW"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.PersonDetail"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.ArticleByCat"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.ArticleByThema"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.Store"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.StoreMap"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.AllStoresMap"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.Others"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.ResetPW"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.DisplayArticle"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.MapStore"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.StoreMapDetail"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name="com.fnacin.Activities.OtherApplis"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <!--
+              <uses-library android:name="com.google.android.maps" />
+        		<activity android:name=".StoreDetail"   android:theme="@android:style/Theme.Black.NoTitleBar"/>
+        -->
+        <activity
+            android:name="com.fnacin.Activities.ThematiqueViewAdapter"
+            android:label="@string/title_activity_thematique_view_adapter" >
+        </activity>
+
+        <service
+            android:name="com.apns.APNService"
+            android:exported="false"
+            android:label="APNS" >
+            <intent-filter>
+                <action android:name="com.apns.APNService.START" />
+                <action android:name="com.apns.APNService.STOP" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.fnacin.service.GCMIntentService"
+            android:enabled="true" />
+        <!--
+        <receiver android:name="PushNotificationReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="com.apns.APNService.NOTIFICATION"/>
+            </intent-filter>
+        </receiver>
+        -->
+        <receiver
+            android:name="com.fnacin.service.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+
+                <!-- Receives the actual messages. -->
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <!-- Receives the registration id. -->
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="com.fnacin.Activities" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="com.fnacin.Activities.MainPage01"
+            android:label="@string/title_activity_main_page01" >
+        </activity>
+    </application>
+
+</manifest>

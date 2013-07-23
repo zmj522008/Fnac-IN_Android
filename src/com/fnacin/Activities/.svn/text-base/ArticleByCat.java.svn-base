@@ -1,0 +1,43 @@
+package com.fnac.Activity;
+
+import com.fnac.interfaces.GoogleAnalytics;
+import com.fnac.pojo.MutableArticleParameterInfo;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
+import android.os.Bundle;
+import android.util.Log;
+
+public class ArticleByCat extends ArticleList {
+
+	public static final String BUNDLE_CATEGORIE_ID = "categorie_id";
+	private String categorie_id;
+	public static final String BUNDLE_CATEGORIE_NAME= "categorie_name";
+	private String categorie_name;
+	public ArticleByCat() {
+		super(R.layout.tab_home, DisplayType.NORMAL_DISPLAY);
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		categorie_id = getIntent().getStringExtra(BUNDLE_CATEGORIE_ID);
+		categorie_name=getIntent().getStringExtra(BUNDLE_CATEGORIE_NAME);
+		Log.d(TAG, "ArticleByCatonCreate:catId=" + categorie_id);
+		Log.d(TAG, "ArticleByCatonCreate:catName=" + categorie_name);
+		GoogleAnalytics.trackPage("/INTRAFNAC - RUBRIQUE/"+categorie_name, this);
+	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		populateListArticle();
+	}
+
+	protected void populateArticleParameterInfo(MutableArticleParameterInfo params) {
+		
+		categorie_id = getIntent().getStringExtra(BUNDLE_CATEGORIE_ID);
+		params.setCateId(categorie_id);
+		Log.d(TAG, "Cat.populateArticleParameterInfo catId=" + categorie_id);
+	}
+}

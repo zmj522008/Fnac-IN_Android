@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/logo_background" >
+
+        <Button
+            android:id="@+id/bnt_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/bnt_category"
+            android:background="@drawable/btn" />
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/logo"
+            android:scaleType="centerCrop" />
+
+    </RelativeLayout>
+
+	<!--  
+	 <ListView android:id="@id/android:list" 
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:background="#FFFFFFFF"
+		android:divider="#C2C2C2"
+		android:dividerHeight="1dp"
+		android:footerDividersEnabled="true"
+        android:drawSelectorOnTop="false"
+		android:scrollbars="vertical" />
+		-->	
+		<com.handmark.pulltorefresh.library.PullToRefreshListView
+    android:id="@+id/pull_to_refresh_listview"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:background="#FFFFFF"
+		android:divider="#C2C2C2"
+		android:dividerHeight="1dp"
+		android:footerDividersEnabled="true"
+        android:drawSelectorOnTop="false"
+		android:scrollbars="vertical" />
+</LinearLayout>

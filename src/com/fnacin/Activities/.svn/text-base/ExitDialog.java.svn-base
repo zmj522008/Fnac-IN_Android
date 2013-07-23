@@ -1,0 +1,37 @@
+package com.fnac.Activity;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+
+public class ExitDialog {
+	Activity mActivity;
+
+	public ExitDialog(Activity activity) {
+		mActivity = activity;
+	}
+
+	public void show() {
+		AlertDialog.Builder builder = new Builder(mActivity);
+		builder.setMessage(R.string.ConfirmMessage);
+		builder.setTitle(R.string.ConfirmTitle);
+		builder.setPositiveButton(R.string.ConfirmBtnYes,
+				new android.content.DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						mActivity.finish();
+					}
+
+				});
+		builder.setNegativeButton(R.string.ConfirmBtnNo,
+				new android.content.DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+		builder.create().show();
+	}
+}

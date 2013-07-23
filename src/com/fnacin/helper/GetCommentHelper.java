@@ -1,0 +1,103 @@
+package com.fnacin.helper;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import org.xmlpull.v1.XmlPullParser;
+
+import android.util.Log;
+import android.util.Xml;
+
+import com.fnacin.pojo.ArticleInfo;
+import com.fnacin.pojo.CommentInfo;
+
+public class GetCommentHelper {
+	private static final String TAG = "fnac";
+	private static HashMap<String, Integer> tagMap = new HashMap<String, Integer>(){
+	private static final long serialVersionUID = 4124751168637400732L;
+	{
+		put("commentaires",1);
+		put("commentaire",2);
+		put("prenom",3);
+		put("date_depot",4);
+		put("contenu",5);
+	}};
+	public static List<CommentInfo> ReadXmlByPull (InputStream inputStream)throws Exception {
+		Log.d(TAG, "Begin ReadXmlByPull"+new Date());
+		XmlPullParser xmlpull = Xml.newPullParser();
+		xmlpull.setInput(inputStream, "utf-8");
+		int eventCode = xmlpull.getEventType();
+		ArticleInfo articleInfo = null;
+		// 评论List
+		List<CommentInfo> commentsList = null;
+		// 评论
+		CommentInfo commentInfo = null;
+		while(eventCode!=XmlPullParser.END_DOCUMENT){
+			switch (eventCode){
+				case XmlPullParser.START_DOCUMENT:	{
+					break;
+				}
+				case XmlPullParser.START_TAG:{					
+					Integer tagNum = tagMap.get(xmlpull.getName());
+					if(tagNum==null){
+						break;
+					}
+					switch(tagNum){
+					
+					case 1:		// commentaires
+						commentsList = new ArrayList<CommentInfo>();
+						break;
+					case 2:		// commentaire
+						commentInfo = new CommentInfo();
+						commentInfo.setId(xmlpull.getAttributeValue("","id"));
+						break;
+					case 3:		// prenom
+						commentInfo.setName(xmlpull.nextText());
+						break;
+					case 4:		// date_depot
+						commentInfo.setDate(xmlpull.nextText());
+						break;
+					case 5:		// contenu both article and comment
+						if(commentInfo!=null){
+							commentInfo.setContent(xmlpull.nextText());							
+						}else if(articleInfo!=null){
+							articleInfo.setContent(xmlpull.nextText());							
+						}
+					default:
+						break;
+					}
+					break;
+				}
+				case XmlPullParser.END_TAG:	{ 
+					Integer tagNum = tagMap.get(xmlpull.getName());
+					if(tagNum==null){
+						break;
+					}
+					switch(tagNum){
+				
+				
+					case 2:		// commentaire
+						if(commentInfo!=null){
+							commentsList.add(commentInfo);
+							commentInfo = null;
+						}
+						break;
+					default:
+						break;
+					}
+					break;
+				}
+			}
+			
+			eventCode = xmlpull.next();//没有结束xml文件就推到下个进行解析			
+			
+		}
+		Log.d(TAG, "End ReadXmlByPull"+new Date());
+		Log.d(TAG, "get commentslist");
+		System.out.print(commentsList);
+		return commentsList;
+	}
+}

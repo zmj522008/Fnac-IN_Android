@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	 android:layout_width="fill_parent"
+	android:layout_height="fill_parent" 
+	android:background="#FFFFFF"
+	>
+			
+	<LinearLayout 
+    android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	 android:orientation="horizontal"
+	android:background="@drawable/logo_background"
+	android:gravity="center"  >
+		<ImageView 
+		android:layout_gravity="center_vertical"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content" 
+		android:layout_marginBottom="2dip" 
+		android:layout_marginTop="2dip" 
+		android:background="@drawable/logo"
+		 android:scaleType="centerCrop"
+		  android:id="@+id/logo">
+		</ImageView>	
+	 </LinearLayout>
+	 
+	 <LinearLayout 
+    android:layout_width="fill_parent"
+	android:layout_height="35dp"
+	 android:background="@drawable/valiter_button_background" android:orientation="vertical">
+	     <Button android:id="@+id/btnAddToContact"
+	      android:layout_gravity="right" 
+	      
+	      android:text="@string/LabelAddToContactButton"
+	      android:gravity="center"
+	      android:textSize="15sp"
+	      android:paddingTop="2dp"
+	      android:paddingBottom="5dp"
+	      android:paddingLeft="10dp"
+	      android:paddingRight="10dp"
+	      android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_margin="3dip"></Button>
+	</LinearLayout>
+	<LinearLayout
+	 android:orientation="horizontal"
+	android:gravity="center"
+    android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:paddingBottom="10dp"
+	>
+	     
+	    
+					   <TextView android:textColor="#000000" android:id="@+id/tv_civilite"
+					android:layout_marginTop="3px"
+					android:layout_height="wrap_content" android:layout_width="wrap_content"
+					android:textSize="15sp" android:text="M"/>
+					
+			    	<TextView android:id="@+id/tv_lastname"
+					android:layout_gravity="center_vertical"
+					android:gravity="center_horizontal" android:textColor="#000000"
+					android:paddingLeft="5dp" android:paddingRight="5dp"
+					android:layout_height="wrap_content" android:layout_width="wrap_content"
+					android:textSize="15sp" android:layout_marginTop="3dip" android:text="lastname"/>
+				   <TextView android:id="@+id/tv_firstname"
+					android:layout_marginLeft="5px" android:layout_height="wrap_content"
+					android:layout_width="wrap_content" android:layout_marginTop="3dip"
+					android:textColor="#000000" android:textSize="15sp" android:text="firstname"/>
+					</LinearLayout>
+
+					
+	<!--  <LinearLayout
+	android:orientation="vertical"
+	android:gravity="center"
+    android:layout_width="fill_parent"
+	android:layout_height="wrap_content" 
+	android:id="@+id/tv_content"
+	android:scrollbars="vertical"
+	/>-->
+
+<!-- 
+        android:overScrollMode="always" 
+
+ -->
+	<ScrollView
+        android:layout_width="fill_parent" 
+        android:layout_height="fill_parent" 
+        android:scrollbarAlwaysDrawVerticalTrack="true" 
+        android:scrollbarStyle="outsideInset" 
+        android:scrollbars="vertical" >
+	<LinearLayout
+	android:orientation="vertical"
+	android:gravity="center"
+    android:layout_width="fill_parent"
+	android:layout_height="wrap_content" 
+	android:id="@+id/tv_content" >
+	</LinearLayout>
+	</ScrollView>
+	</LinearLayout>

@@ -1,0 +1,13 @@
+package com.fnacin.pojo;
+
+public class SendEmailResultInfo {
+	
+	private ErrorInfo errorInfo;
+	public ErrorInfo getErrorInfo() {
+		return errorInfo;
+	}
+	public void setErrorInfo(ErrorInfo errorInfo) {
+		this.errorInfo = errorInfo;
+	}
+
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <group>
+        <item android:id="@+id/like_btn" android:title="Like" android:icon="@drawable/detail_like_btn" ></item>
+        <item android:id="@+id/favor_btn" android:title="Ajoute Préféres" android:icon="@drawable/favorite"></item>
+    </group>
+
+</menu>

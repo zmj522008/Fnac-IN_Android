@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="SelTextColor">#000000</color>
+	<color name="SelBackground">#FFFFFF</color>
+	<color name="UnSelBackground">#FFFFFF</color>
+	<color name="UnSelTextColor">#FFFFFF</color>
+	<color name="ListViewBackground">#FFFFFF</color>
+</resources>

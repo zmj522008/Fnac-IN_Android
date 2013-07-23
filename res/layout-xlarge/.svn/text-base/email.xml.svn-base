@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:gravity="center" android:background="@drawable/login"
+	android:orientation="vertical">
+	<ImageView android:layout_height="300dip"
+		android:layout_width="600dip" android:background="@drawable/logofnac"></ImageView>
+	<LinearLayout android:layout_width="700dip"
+		android:layout_height="150dip" android:gravity="center"
+		android:orientation="vertical" android:background="@drawable/logintextbackground">
+
+		<LinearLayout android:layout_height="wrap_content"
+			android:layout_width="fill_parent">
+			<LinearLayout android:layout_height="wrap_content"
+				android:layout_width="fill_parent" android:layout_weight="1"
+				android:gravity="right" android:layout_marginRight="10dip"
+				android:layout_marginBottom="70dip">
+				<TextView android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:text="@string/LabelEmail"
+					android:textStyle="bold" android:textSize="42sp"
+					android:layout_marginRight="10dip">
+				</TextView>
+			</LinearLayout>
+			<LinearLayout android:layout_height="wrap_content"
+				android:layout_marginLeft="10dip" android:layout_width="fill_parent"
+				android:layout_weight="1" android:gravity="left">
+				<EditText android:id="@+id/EditTextEmail"
+					android:textStyle="bold" android:textSize="20sp" android:inputType="textEmailAddress"
+					android:layout_width="300dp" android:layout_height="60dp"
+					android:maxLines="1">
+				</EditText>
+			</LinearLayout>
+		</LinearLayout>
+
+	</LinearLayout>
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		android:gravity="center" android:layout_marginTop="15dip">
+		<TextView android:id="@+id/Submit" android:layout_width="wrap_content"
+			android:layout_height="50dip" android:text="@string/LabelDoneButton"
+			android:gravity="center" android:textStyle="bold" android:textSize="35sp">
+		</TextView>
+
+	</LinearLayout>
+</LinearLayout>

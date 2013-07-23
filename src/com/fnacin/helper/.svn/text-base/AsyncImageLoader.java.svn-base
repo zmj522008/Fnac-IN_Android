@@ -1,0 +1,196 @@
+package com.fnac.helper;
+
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
+
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+
+public class AsyncImageLoader implements Runnable {
+	private static final int SLOT_SIZE = 20;
+	private static final AsyncImageLoader INSTANCE=new AsyncImageLoader();
+	private static final String TAG = "AsyncImageLoader";
+	private Map<String,Slot> imageSlots = new HashMap<String,Slot>();
+	public int counter;
+	public Vector<Slot> imageLoadQueue;
+	private boolean interrupted;
+	
+	private int startCount;
+	
+	private AsyncImageLoader(){
+		imageLoadQueue = new Vector<AsyncImageLoader.Slot>();
+	}
+	
+	/**
+	 * @return the instance
+	 */
+	public static AsyncImageLoader getInstance() {
+		return INSTANCE;
+	}
+
+	public class Slot {
+
+	   private	Drawable image;
+	   private  int lastUsed;
+	   private  ImageSuccessHandler  successHandler;
+	   private  String url;
+	}
+
+	public void reset() {
+		imageSlots = new HashMap<String,Slot>();
+	}
+
+	public void run() {
+
+		while (!interrupted) {
+			Slot slot;
+			synchronized (imageLoadQueue) {
+				if (imageLoadQueue.isEmpty()) {
+					try {
+						imageLoadQueue.wait();
+					} catch (InterruptedException e) {
+					}
+				}
+				if (!imageLoadQueue.isEmpty() && !interrupted) {
+					slot = imageLoadQueue.remove(0);
+				} else {
+					slot = null;
+				}
+			}
+			if (slot != null) {
+				String imageUrl = slot.url;
+				Handler handler = slot.successHandler;
+				Log.d("FNAC", this + "] loadImageFromUrl: " + imageUrl);
+				Drawable drawable = loadImageFromUrl(imageUrl);
+				if (drawable != null) {
+					imageSlots.put(imageUrl, slot);
+					if (imageSlots.size() > SLOT_SIZE) {
+						removeLRUSlot();
+					}
+
+					handler.sendMessage(handler.obtainMessage(0, drawable));
+					slot.image = drawable;
+					imageSlots.put(imageUrl, slot);
+					Log.d("FNAC", this + "] image loaded: " + imageUrl);
+
+				}
+				slot.successHandler = null;
+			}
+		}
+	}
+	
+	/**
+	 * Tries to get an image form a given URL in the cache. If the image is
+	 * available in cache returns it immediately. If the image is being
+	 * requested returns null. If the image is not available and not already
+	 * requested, trigger an image request in a separate thread. The callback
+	 * will be called if and when the image is retrieved successfully.
+	 * 
+	 * @param imageUrl
+	 * @param callback
+	 * @return
+	 */
+	public Drawable loadDrawable(final String imageUrl, final ImageCallback callback){
+		counter++;
+		if(imageSlots.containsKey(imageUrl)){
+			final Slot slot = imageSlots.get(imageUrl);
+			if (slot.image != null) {
+				slot.lastUsed = counter;
+				Log.v(TAG, "cache hit: " + imageUrl);
+				return slot.image;
+			} else if (slot.successHandler != null) {
+				slot.successHandler.addCallback(callback);
+				return null;
+			}
+		}
+		Log.v(TAG, "cache miss: " + imageUrl);
+		final ImageSuccessHandler handler = new ImageSuccessHandler(callback, imageUrl);
+		
+		final Slot slot = new Slot();
+		slot.url = imageUrl;
+		slot.successHandler = handler;
+		slot.lastUsed = counter;
+		
+		synchronized (imageLoadQueue) {			
+			imageLoadQueue.remove(slot);
+			imageLoadQueue.insertElementAt(slot, 0); // last becomes first
+			imageLoadQueue.notify();
+		}
+		
+		return null;
+	}
+	
+	public void start()
+	{
+		if (startCount == 0) {
+			interrupted = false;
+			new Thread(this).start();
+		} 
+		++startCount;
+	}
+	
+	public void stop() {
+		--startCount;
+		if (startCount == 0) {
+			synchronized (imageLoadQueue) {			
+				interrupted = true;
+				imageLoadQueue.notify();
+			}
+		}
+	}
+	
+	private void removeLRUSlot() {
+		Slot lru = null;
+		Iterator<Slot> ite = imageSlots.values().iterator();
+		if (ite.hasNext()) {
+			lru = ite.next();
+			while (ite.hasNext()) {
+				Slot slot = ite.next();
+				if (slot.lastUsed < lru.lastUsed) {
+					lru = slot;
+				}
+			}
+			imageSlots.remove(lru.url);
+		}
+	}
+	
+	protected Drawable loadImageFromUrl(String imageUrl) {
+		try {
+			return Drawable.createFromStream(new URL(imageUrl).openStream(),"src");
+		} catch (Exception e) {
+//			throw new RuntimeException(e);
+			Log.e(TAG, "(((((((((((((((((((("+e.toString());
+		}
+		return null;
+	}
+
+	private final class ImageSuccessHandler extends Handler {
+		private final Vector<ImageCallback> callbacks;
+		private final String imageUrl;
+		private ImageSuccessHandler(ImageCallback callback, String imageUrl) {
+			this.callbacks = new Vector<AsyncImageLoader.ImageCallback>();
+			this.callbacks.add(callback);
+			this.imageUrl = imageUrl;
+		}
+
+		public void addCallback(ImageCallback callback) {
+			callbacks.add(callback);
+		}
+		
+		@Override 
+		public void handleMessage(Message msg) {
+			for (ImageCallback callback : callbacks) {
+				callback.imageLoaded((Drawable) msg.obj, imageUrl);
+			}
+		}
+	}
+
+	public interface ImageCallback{
+		public void imageLoaded(Drawable imageDrawable,String imageUrl);
+	}
+}
